@@ -22,7 +22,7 @@ export const ExpensesView = () => {
           <h2 className="text-2xl font-bold text-foreground">{t('expenses.title')}</h2>
           <p className="text-muted-foreground">{t('expenses.history')}</p>
         </div>
-        <Button 
+        <Button
           onClick={() => setIsFormOpen(true)}
           className="bg-gradient-primary hover:opacity-90 transition-opacity"
         >

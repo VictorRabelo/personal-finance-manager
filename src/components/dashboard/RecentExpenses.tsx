@@ -5,7 +5,7 @@ import { Trash2 } from 'lucide-react';
 
 export const RecentExpenses = () => {
   const { expenses, budget, deleteExpense, t } = useApp();
-  
+
   const recentExpenses = [...expenses]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5);
@@ -22,21 +22,21 @@ export const RecentExpenses = () => {
     <div className="space-y-3">
       {recentExpenses.map(expense => {
         const category = budget.categories.find(c => c.id === expense.categoryId);
-        
+
         return (
-          <div 
+          <div
             key={expense.id}
             className="flex items-center justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
           >
             <div className="flex items-center gap-3 flex-1">
-              <div 
+              <div
                 className="w-2 h-2 rounded-full"
                 style={{ backgroundColor: category?.color }}
               />
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-foreground truncate">{expense.description}</p>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span>{category?.name}</span>
+                  <span>{t(category?.name)}</span>
                   <span>•</span>
                   <span>{format(new Date(expense.date), 'MMM dd, yyyy')}</span>
                 </div>

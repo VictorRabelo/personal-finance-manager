@@ -28,9 +28,9 @@ export const GoalList = () => {
       {goals.map(goal => {
         const progress = (goal.currentAmount / goal.targetAmount) * 100;
         const isCompleted = progress >= 100;
-        
+
         return (
-          <Card 
+          <Card
             key={goal.id}
             className="p-6 bg-gradient-card border-border/50 hover:shadow-md transition-shadow"
           >
@@ -59,12 +59,12 @@ export const GoalList = () => {
                     ${goal.currentAmount.toFixed(2)} / ${goal.targetAmount.toFixed(2)}
                   </span>
                 </div>
-                <Progress 
+                <Progress
                   value={Math.min(progress, 100)}
                   className="h-2"
                   indicatorStyle={{
-                    background: isCompleted 
-                      ? 'hsl(var(--success))' 
+                    background: isCompleted
+                      ? 'hsl(var(--success))'
                       : 'var(--gradient-primary)',
                   }}
                 />

@@ -1,73 +1,93 @@
-# Welcome to your Lovable project
+# Personal Finance Manager
 
-## Project info
+A simple, intuitive, and mobile-first **Personal Finance Manager** built with **React 18+**, **TailwindCSS**, and **Context API/Zustand**.
+This project follows **Clean Code**, **Clean Architecture**, and **responsive-first design principles**, making it scalable, maintainable, and user-friendly.
 
-**URL**: https://lovable.dev/projects/e9d8a9ca-9fe0-4bca-9566-0c88188897b0
+## 🚀 Features
 
-## How can I edit this code?
+- **Budget Categories**: Configurable categories such as Fixed Costs, Comfort, Goals, Pleasures, Financial Freedom, and Knowledge.
+- **Dynamic Sliders**: Adjust percentages for each category (total must equal 100%).
+- **Expense Control**: Manual input of expenses per category with automatic calculation of spent vs. remaining budget.
+- **Interactive Dashboard**:
+  - Donut/Pie chart for category distribution
+  - Progress bars with visual feedback
+  - Detailed expense table
+  - Total spent and remaining balance
+- **Persistence**: LocalStorage to keep data across sessions.
+- **Dark/Light Theme Toggle**.
+- **Language Toggle (EN ↔ PT-BR)**.
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+- **React 18+** (functional components + hooks)
+- **TailwindCSS** (modern and mobile-first UI)
+- **Context API or Zustand** (lightweight state manager)
+- **Recharts or Chart.js** (interactive charts)
+- **localStorage** (data persistence)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e9d8a9ca-9fe0-4bca-9566-0c88188897b0) and start prompting.
+## 📈 Future Improvements (Planned for v2.0)
 
-Changes made via Lovable will be committed automatically to this repo.
+- Expense history (month/year view)
+- Goal tracking (planned vs achieved)
+- Local alerts/notifications (e.g., category reaches 80% usage)
+- Backend API integration (FastAPI) for synchronization and multi-user support
 
-**Use your preferred IDE**
+## 📂 Project Structure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+/src
+  /components   → Reusable UI components
+  /contexts     → Global state management (Context API or Zustand)
+  /hooks        → Custom React hooks
+  /i18n         → Internationalization (EN ↔ PT-BR)
+  /lib          → External libraries, config helpers or adapters
+  /pages        → Main application pages (Dashboard, Settings, etc.)
+  /types        → TypeScript types and interfaces
+  App.tsx       → Main application component
+  App.css       → Global app styles
+  index.css     → Tailwind base styles
+  main.tsx      → Application entry point
+  vite-env.d.ts → Vite environment typings
 ```
 
-**Edit a file directly in GitHub**
+## 🧑‍💻 Clean Code & Architecture Guidelines
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Keep components **small, reusable, and single-responsibility**.
+- Use **hooks** for logic separation.
+- Maintain a clear separation between **UI, domain logic, and data handling**.
+- Follow **consistent naming conventions**.
+- Ensure the app is **mobile-first** and responsive.
 
-**Use GitHub Codespaces**
+## 📦 Installation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/VictorRabelo/personal-finance-manager.git
+   cd personal-finance-manager
+   ```
 
-## What technologies are used for this project?
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-This project is built with:
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+4. Open in your browser:
+   ```
+   http://localhost:8080
+   ```
 
-## How can I deploy this project?
+## 📜 License
 
-Simply open [Lovable](https://lovable.dev/projects/e9d8a9ca-9fe0-4bca-9566-0c88188897b0) and click on Share -> Publish.
+This project is licensed under the MIT License.
+Feel free to use, modify, and share it.
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+### Author
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Developed by **Victor Rabelo** as a personal project and portfolio piece.

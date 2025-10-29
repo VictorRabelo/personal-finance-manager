@@ -26,7 +26,7 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.categoryId || !formData.amount || !formData.description) {
       return;
     }
@@ -56,7 +56,7 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
           <SelectContent>
             {budget.categories.map(category => (
               <SelectItem key={category.id} value={category.id}>
-                {category.name}
+                {t(category.name)}
               </SelectItem>
             ))}
           </SelectContent>

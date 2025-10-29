@@ -16,23 +16,23 @@ export const CategoryBreakdown = () => {
         return (
           <div key={category.id} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-foreground">{category.name}</span>
+              <span className="font-medium text-foreground">{t(category.name)}</span>
               <span className="text-muted-foreground">
                 ${spent.toFixed(2)} / ${allocated.toFixed(2)}
               </span>
             </div>
-            <Progress 
-              value={Math.min(percentage, 100)} 
+            <Progress
+              value={Math.min(percentage, 100)}
               className="h-2"
               style={{
                 background: 'hsl(var(--muted))',
               }}
               indicatorStyle={{
-                background: percentage > 100 
-                  ? 'hsl(var(--destructive))' 
-                  : percentage > 80 
-                  ? 'hsl(var(--warning))' 
-                  : category.color,
+                background: percentage > 100
+                  ? 'hsl(var(--destructive))'
+                  : percentage > 80
+                    ? 'hsl(var(--warning))'
+                    : category.color,
               }}
             />
             <div className="flex items-center justify-between text-xs">

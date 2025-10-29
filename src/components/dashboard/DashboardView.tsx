@@ -4,18 +4,27 @@ import { DollarSign, TrendingDown, Wallet } from 'lucide-react';
 import { BudgetChart } from './BudgetChart';
 import { CategoryBreakdown } from './CategoryBreakdown';
 import { RecentExpenses } from './RecentExpenses';
+import React from 'react';
+
+type StatCard = {
+  label: string;
+  value: number;
+  icon: React.ElementType;
+  color: string;
+  bgColor: string;
+};
 
 export const DashboardView = () => {
-  const { budget, expenses, t, getCategorySpent } = useApp();
-  
+  const { budget, expenses, t } = useApp();
+
   const currentMonth = new Date().toISOString().slice(0, 7);
   const totalSpent = expenses
     .filter(e => e.month === currentMonth)
     .reduce((sum, e) => sum + e.amount, 0);
-  
+
   const remaining = budget.totalIncome - totalSpent;
 
-  const stats = [
+  const stats: StatCard[] = [
     {
       label: t('dashboard.totalIncome'),
       value: budget.totalIncome,

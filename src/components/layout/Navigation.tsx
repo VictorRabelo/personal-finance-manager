@@ -23,14 +23,14 @@ export const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
           {tabs.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
-            
+
             return (
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors relative
-                  ${isActive 
-                    ? 'text-primary' 
+                  ${isActive
+                    ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground'
                   }`}
               >

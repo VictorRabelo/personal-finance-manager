@@ -22,7 +22,7 @@ export const GoalsView = () => {
           <h2 className="text-2xl font-bold text-foreground">{t('goals.title')}</h2>
           <p className="text-muted-foreground">{t('goals.progress')}</p>
         </div>
-        <Button 
+        <Button
           onClick={() => setIsFormOpen(true)}
           className="bg-gradient-success hover:opacity-90 transition-opacity"
         >

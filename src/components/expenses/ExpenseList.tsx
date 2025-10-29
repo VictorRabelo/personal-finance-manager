@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 
 export const ExpenseList = () => {
   const { expenses, budget, deleteExpense, t } = useApp();
-  
+
   const sortedExpenses = [...expenses].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
@@ -23,22 +23,22 @@ export const ExpenseList = () => {
     <div className="space-y-3">
       {sortedExpenses.map(expense => {
         const category = budget.categories.find(c => c.id === expense.categoryId);
-        
+
         return (
-          <Card 
+          <Card
             key={expense.id}
             className="p-4 bg-gradient-card border-border/50 hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4 flex-1">
-                <div 
+                <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: category?.color }}
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-foreground">{expense.description}</p>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>{category?.name}</span>
+                    <span>{t(category?.name)}</span>
                     <span>•</span>
                     <span>{format(new Date(expense.date), 'MMM dd, yyyy')}</span>
                   </div>

@@ -2,11 +2,11 @@ import { useApp } from '@/contexts/AppContext';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 export const BudgetChart = () => {
-  const { budget, getCategorySpent } = useApp();
+  const { budget, getCategorySpent, t } = useApp();
   const currentMonth = new Date().toISOString().slice(0, 7);
 
   const data = budget.categories.map(category => ({
-    name: category.name,
+    name: t(category.name),
     value: getCategorySpent(category.id, currentMonth),
     allocated: (budget.totalIncome * category.percentage) / 100,
     color: category.color,
@@ -23,18 +23,25 @@ export const BudgetChart = () => {
           outerRadius={100}
           fill="#8884d8"
           dataKey="value"
-          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+          label={({ name, percent, value }) => value > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : ''}
         >
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        <Tooltip 
+        <Tooltip
           formatter={(value: number) => `$${value.toFixed(2)}`}
           contentStyle={{
             backgroundColor: 'hsl(var(--card))',
             border: '1px solid hsl(var(--border))',
             borderRadius: '8px',
+          }}
+          labelStyle={{
+            color: 'hsl(var(--foreground))',
+            fontWeight: 600,
+          }}
+          itemStyle={{
+            color: 'hsl(var(--foreground))',
           }}
         />
         <Legend />

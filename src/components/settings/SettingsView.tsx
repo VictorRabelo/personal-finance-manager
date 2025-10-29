@@ -21,7 +21,7 @@ export const SettingsView = () => {
 
   const handleSave = () => {
     const totalPercentage = categories.reduce((sum, cat) => sum + cat.percentage, 0);
-    
+
     if (totalPercentage !== 100) {
       alert(t('categories.totalMustBe100'));
       return;
@@ -69,9 +69,8 @@ export const SettingsView = () => {
               <h3 className="text-lg font-semibold text-foreground">
                 {t('categories.title')}
               </h3>
-              <span className={`text-sm font-medium ${
-                totalPercentage === 100 ? 'text-success' : 'text-destructive'
-              }`}>
+              <span className={`text-sm font-medium ${totalPercentage === 100 ? 'text-success' : 'text-destructive'
+                }`}>
                 {totalPercentage}%
               </span>
             </div>
@@ -79,11 +78,11 @@ export const SettingsView = () => {
             <div className="space-y-6">
               {categories.map(category => {
                 const allocated = (parseFloat(income) * category.percentage) / 100;
-                
+
                 return (
                   <div key={category.id} className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label className="font-medium">{category.name}</Label>
+                      <Label className="font-medium">{t(category.name)}</Label>
                       <div className="flex items-center gap-2 text-sm">
                         <span className="text-muted-foreground">{category.percentage}%</span>
                         <span className="font-medium">${allocated.toFixed(2)}</span>
@@ -102,7 +101,7 @@ export const SettingsView = () => {
             </div>
           </div>
 
-          <Button 
+          <Button
             onClick={handleSave}
             className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
             disabled={totalPercentage !== 100}

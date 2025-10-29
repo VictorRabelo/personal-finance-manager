@@ -19,7 +19,7 @@ export const GoalForm = ({ onClose }: GoalFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.targetAmount || !formData.deadline) {
       return;
     }

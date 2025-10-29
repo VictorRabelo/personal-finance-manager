@@ -26,12 +26,12 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const DEFAULT_CATEGORIES: Category[] = [
-  { id: '1', name: 'Fixed Costs', percentage: 30, color: '#ef4444', icon: 'Home' },
-  { id: '2', name: 'Comfort', percentage: 20, color: '#f59e0b', icon: 'Coffee' },
-  { id: '3', name: 'Goals', percentage: 20, color: '#10b981', icon: 'Target' },
-  { id: '4', name: 'Pleasures', percentage: 15, color: '#8b5cf6', icon: 'Heart' },
-  { id: '5', name: 'Financial Freedom', percentage: 10, color: '#06b6d4', icon: 'TrendingUp' },
-  { id: '6', name: 'Knowledge', percentage: 5, color: '#3b82f6', icon: 'BookOpen' },
+  { id: '1', name: 'categories.fixedCosts', percentage: 30, color: '#ef4444', icon: 'Home' },
+  { id: '2', name: 'categories.comfort', percentage: 20, color: '#f59e0b', icon: 'Coffee' },
+  { id: '3', name: 'categories.goals', percentage: 20, color: '#10b981', icon: 'Target' },
+  { id: '4', name: 'categories.pleasures', percentage: 15, color: '#8b5cf6', icon: 'Heart' },
+  { id: '5', name: 'categories.financialFreedom', percentage: 10, color: '#06b6d4', icon: 'TrendingUp' },
+  { id: '6', name: 'categories.knowledge', percentage: 5, color: '#3b82f6', icon: 'BookOpen' },
 ];
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
@@ -52,7 +52,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('theme') as Theme;
-    return saved || 'light';
+    return saved || 'dark';
   });
 
   const [language, setLanguageState] = useState<Language>(() => {
@@ -88,18 +88,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const t = (key: string, params?: Record<string, string>) => {
     const keys = key.split('.');
     let value: any = translations[language];
-    
+
     for (const k of keys) {
       value = value?.[k];
     }
-    
+
     if (typeof value === 'string' && params) {
       return Object.entries(params).reduce(
         (acc, [key, val]) => acc.replace(`{{${key}}}`, val),
         value
       );
     }
-    
+
     return value || key;
   };
 
@@ -114,7 +114,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const addExpense = (expense: Omit<Expense, 'id'>) => {
     const newExpense = { ...expense, id: Date.now().toString() };
     setExpenses([...expenses, newExpense]);
-    
+
     const category = budget.categories.find(c => c.id === expense.categoryId);
     const spent = getCategorySpent(expense.categoryId, expense.month) + expense.amount;
     const allocated = (budget.totalIncome * (category?.percentage || 0)) / 100;
@@ -123,16 +123,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     if (percentage >= 80 && percentage < 100) {
       toast({
         title: t('common.error'),
-        description: t('alerts.budgetWarning', { 
-          percentage: percentage.toString(), 
-          category: category?.name || '' 
+        description: t('alerts.budgetWarning', {
+          percentage: percentage.toString(),
+          category: t(category?.name) || ''
         }),
         variant: 'destructive',
       });
     } else if (percentage >= 100) {
       toast({
         title: t('common.error'),
-        description: t('alerts.budgetExceeded', { category: category?.name || '' }),
+        description: t('alerts.budgetExceeded', { category: t(category?.name) || '' }),
         variant: 'destructive',
       });
     } else {
