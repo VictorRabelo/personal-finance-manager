@@ -1,4 +1,4 @@
-import { Moon, Sun, Globe } from 'lucide-react';
+import { Moon, Sun, Globe, PieChart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import {
@@ -17,7 +17,7 @@ export const Header = () => {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-primary">
-              <span className="text-xl font-bold text-primary-foreground">F</span>
+              <PieChart className="h-5 text-primary-foreground" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-foreground">{t('app.title')}</h1>
