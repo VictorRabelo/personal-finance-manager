@@ -40,7 +40,7 @@ export const CategoryBreakdown = () => {
                 {t('categories.remaining')}: ${Math.abs(remaining).toFixed(2)}
               </span>
               <span className="text-muted-foreground">
-                {percentage.toFixed(0)}%
+                {percentage ? percentage.toFixed(0) : 0}%
               </span>
             </div>
           </div>
