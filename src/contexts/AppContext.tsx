@@ -1,8 +1,37 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { Budget, Category, Expense, Goal, Language, Theme } from '@/types';
 import { translations } from '@/i18n/translations';
 import { toast } from '@/hooks/use-toast';
 import { getDefaultCategories, normalizeCategoryPercentages } from '@/lib/categories';
+
+const getExpenseYear = (expense: Expense) => {
+  if (expense.date) {
+    const [year] = expense.date.split('-');
+    if (year) {
+      return year;
+    }
+  }
+  if (expense.month) {
+    const [year] = expense.month.split('-');
+    if (year) {
+      return year;
+    }
+  }
+  return '';
+};
+
+const getExpenseMonthKey = (expense: Expense) => {
+  if (expense.date) {
+    const [year, month] = expense.date.split('-');
+    if (year && month) {
+      return `${year}-${month}`;
+    }
+  }
+  if (expense.month) {
+    return expense.month;
+  }
+  return '';
+};
 
 interface AppContextType {
   budget: Budget;
@@ -24,6 +53,8 @@ interface AppContextType {
   updateCategory: (id: string, category: Partial<Omit<Category, 'id'>>) => void;
   deleteCategory: (id: string) => void;
   getExpensesByMonth: (month: string) => Expense[];
+  getExpensesByYear: (year: string) => Expense[];
+  getMonthlyTotals: (year: string) => { month: string; total: number }[];
   getCategorySpent: (categoryId: string, month?: string) => number;
 }
 
@@ -293,6 +324,34 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return expenses.filter(e => e.month === month);
   };
 
+  const getExpensesByYear = useCallback(
+    (year: string) => expenses.filter(expense => getExpenseYear(expense) === year),
+    [expenses],
+  );
+
+  const getMonthlyTotals = useCallback(
+    (year: string) => {
+      const months = Array.from({ length: 12 }, (_, index) => (index + 1).toString().padStart(2, '0'));
+      const yearlyExpenses = getExpensesByYear(year);
+      const totalsMap = yearlyExpenses.reduce<Record<string, number>>((acc, expense) => {
+        const monthKey = getExpenseMonthKey(expense);
+        const [, month = ''] = monthKey.split('-');
+
+        if (month) {
+          acc[month] = (acc[month] || 0) + expense.amount;
+        }
+
+        return acc;
+      }, {});
+
+      return months.map(month => ({
+        month,
+        total: Number((totalsMap[month] || 0).toFixed(2)),
+      }));
+    },
+    [getExpensesByYear],
+  );
+
   const getCategorySpent = (categoryId: string, month?: string) => {
     const currentMonth = month || new Date().toISOString().slice(0, 7);
     return expenses
@@ -321,6 +380,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       updateCategory,
       deleteCategory,
       getExpensesByMonth,
+      getExpensesByYear,
+      getMonthlyTotals,
       getCategorySpent,
     }}>
       {children}
