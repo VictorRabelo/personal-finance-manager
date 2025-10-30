@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { CurrencyInput } from '@/components/ui/current-amount';
 
 interface ExpenseFormProps {
   onClose: () => void;
@@ -19,7 +20,7 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
   const { budget, addExpense, t } = useApp();
   const [formData, setFormData] = useState({
     categoryId: '',
-    amount: '',
+    amount: null,
     description: '',
     date: new Date().toISOString().split('T')[0],
   });
@@ -76,15 +77,9 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="amount">{t('expenses.amount')}</Label>
-        <Input
-          id="amount"
-          type="number"
-          step="0.01"
-          min="0"
+        <CurrencyInput
           value={formData.amount}
-          onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-          placeholder="0.00"
-          required
+          onChange={(val) => setFormData({ ...formData, amount: val })}
         />
       </div>
 
