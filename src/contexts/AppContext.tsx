@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { Budget, Category, Expense, Goal, Language, Theme } from '@/types';
 import { translations } from '@/i18n/translations';
 import { toast } from '@/hooks/use-toast';
+import { getDefaultCategories, normalizeCategoryPercentages } from '@/lib/categories';
 
 interface AppContextType {
   budget: Budget;
@@ -19,25 +20,35 @@ interface AppContextType {
   toggleTheme: () => void;
   setLanguage: (lang: Language) => void;
   updateCategoryPercentages: (categories: Category[]) => void;
+  addCategory: (category: Omit<Category, 'id'>) => void;
+  updateCategory: (id: string, category: Partial<Omit<Category, 'id'>>) => void;
+  deleteCategory: (id: string) => void;
   getExpensesByMonth: (month: string) => Expense[];
   getCategorySpent: (categoryId: string, month?: string) => number;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const DEFAULT_CATEGORIES: Category[] = [
-  { id: '1', name: 'categories.fixedCosts', percentage: 30, color: '#ef4444', icon: 'Home' },
-  { id: '2', name: 'categories.comfort', percentage: 20, color: '#f59e0b', icon: 'Coffee' },
-  { id: '3', name: 'categories.goals', percentage: 20, color: '#10b981', icon: 'Target' },
-  { id: '4', name: 'categories.pleasures', percentage: 15, color: '#8b5cf6', icon: 'Heart' },
-  { id: '5', name: 'categories.financialFreedom', percentage: 10, color: '#06b6d4', icon: 'TrendingUp' },
-  { id: '6', name: 'categories.knowledge', percentage: 5, color: '#3b82f6', icon: 'BookOpen' },
-];
-
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [budget, setBudget] = useState<Budget>(() => {
     const saved = localStorage.getItem('budget');
-    return saved ? JSON.parse(saved) : { totalIncome: 5000, categories: DEFAULT_CATEGORIES };
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as Budget;
+        const categories = parsed.categories?.length
+          ? normalizeCategoryPercentages(parsed.categories)
+          : getDefaultCategories();
+
+        return {
+          totalIncome: parsed.totalIncome ?? 5000,
+          categories,
+        };
+      } catch (error) {
+        console.error('Failed to parse saved budget from localStorage', error);
+      }
+    }
+
+    return { totalIncome: 5000, categories: getDefaultCategories() };
   });
 
   const [expenses, setExpenses] = useState<Expense[]>(() => {
@@ -104,7 +115,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateBudget = (newBudget: Budget) => {
-    setBudget(newBudget);
+    setBudget({
+      totalIncome: newBudget.totalIncome,
+      categories: normalizeCategoryPercentages(newBudget.categories),
+    });
     toast({
       title: t('common.success'),
       description: t('alerts.incomeUpdated'),
@@ -193,7 +207,86 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateCategoryPercentages = (categories: Category[]) => {
-    setBudget({ ...budget, categories });
+    setBudget(current => ({
+      ...current,
+      categories: normalizeCategoryPercentages(categories),
+    }));
+  };
+
+  const addCategory = (category: Omit<Category, 'id'>) => {
+    let shouldNotify = false;
+    setBudget(current => {
+      const newCategory: Category = {
+        ...category,
+        id: Date.now().toString(),
+      };
+      const updated = normalizeCategoryPercentages([...current.categories, newCategory]);
+      shouldNotify = true;
+      return { ...current, categories: updated };
+    });
+
+    if (shouldNotify) {
+      toast({
+        title: t('common.success'),
+        description: t('alerts.categoryAdded'),
+      });
+    }
+  };
+
+  const updateCategory = (id: string, category: Partial<Omit<Category, 'id'>>) => {
+    let shouldNotify = false;
+    setBudget(current => {
+      if (!current.categories.some(cat => cat.id === id)) {
+        return current;
+      }
+
+      const updatedCategories = current.categories.map(cat =>
+        cat.id === id ? { ...cat, ...category } : cat,
+      );
+
+      shouldNotify = true;
+
+      return {
+        ...current,
+        categories: normalizeCategoryPercentages(updatedCategories),
+      };
+    });
+
+    if (shouldNotify) {
+      toast({
+        title: t('common.success'),
+        description: t('alerts.categoryUpdated'),
+      });
+    }
+  };
+
+  const deleteCategory = (id: string) => {
+    let shouldNotify = false;
+
+    setBudget(current => {
+      if (!current.categories.some(cat => cat.id === id)) {
+        return current;
+      }
+
+      const remaining = current.categories.filter(cat => cat.id !== id);
+      const categories = remaining.length
+        ? normalizeCategoryPercentages(remaining)
+        : getDefaultCategories();
+
+      shouldNotify = true;
+
+      return {
+        ...current,
+        categories,
+      };
+    });
+
+    if (shouldNotify) {
+      toast({
+        title: t('common.success'),
+        description: t('alerts.categoryDeleted'),
+      });
+    }
   };
 
   const getExpensesByMonth = (month: string) => {
@@ -224,6 +317,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       toggleTheme,
       setLanguage,
       updateCategoryPercentages,
+      addCategory,
+      updateCategory,
+      deleteCategory,
       getExpensesByMonth,
       getCategorySpent,
     }}>

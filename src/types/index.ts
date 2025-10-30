@@ -1,9 +1,17 @@
+export type CategoryIcon =
+  | 'Home'
+  | 'Coffee'
+  | 'Target'
+  | 'Heart'
+  | 'TrendingUp'
+  | 'BookOpen';
+
 export interface Category {
   id: string;
   name: string;
   percentage: number;
   color: string;
-  icon: string;
+  icon: CategoryIcon;
 }
 
 export interface Expense {
