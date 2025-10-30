@@ -1,5 +1,6 @@
 import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
+import { useCurrencyFormatter } from '@/lib/formatMoney';
 import { DollarSign, TrendingDown, Wallet } from 'lucide-react';
 import { BudgetChart } from './BudgetChart';
 import { CategoryBreakdown } from './CategoryBreakdown';
@@ -16,6 +17,7 @@ type StatCard = {
 
 export const DashboardView = () => {
   const { budget, expenses, t } = useApp();
+  const { format } = useCurrencyFormatter();
 
   const currentMonth = new Date().toISOString().slice(0, 7);
   const totalSpent = expenses
@@ -67,7 +69,7 @@ export const DashboardView = () => {
                 <div className="flex-1">
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
                   <p className={`text-2xl font-bold ${stat.color}`}>
-                    ${stat.value.toFixed(2)}
+                    {format(stat.value, true)}
                   </p>
                 </div>
               </div>

@@ -1,9 +1,11 @@
 import { useApp } from '@/contexts/AppContext';
 import { Progress } from '@/components/ui/progress';
+import { useCurrencyFormatter } from '@/lib/formatMoney';
 
 export const CategoryBreakdown = () => {
   const { budget, getCategorySpent, t } = useApp();
   const currentMonth = new Date().toISOString().slice(0, 7);
+  const { format } = useCurrencyFormatter();
 
   return (
     <div className="space-y-4">
@@ -37,7 +39,7 @@ export const CategoryBreakdown = () => {
             />
             <div className="flex items-center justify-between text-xs">
               <span className={remaining >= 0 ? 'text-success' : 'text-destructive'}>
-                {t('categories.remaining')}: ${Math.abs(remaining).toFixed(2)}
+                {t('categories.remaining')}: {format(Math.abs(remaining), true)}
               </span>
               <span className="text-muted-foreground">
                 {percentage ? percentage.toFixed(0) : 0}%

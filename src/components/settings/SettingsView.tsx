@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/current-amount';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import {
@@ -27,6 +27,7 @@ import { rebalanceCategories } from '@/lib/categories';
 import { CATEGORY_ICON_COMPONENTS } from './category-icons';
 import { cn } from '@/lib/utils';
 import { DollarSign, Save, Plus, Edit3, Trash2 } from 'lucide-react';
+import { useCurrencyFormatter } from "@/lib/formatMoney";
 
 const getCategoryLabel = (name: string, translate: (key: string) => string) => {
   if (name.startsWith('categories.')) {
@@ -49,13 +50,15 @@ export const SettingsView = () => {
     deleteCategory,
     t,
   } = useApp();
-  const [income, setIncome] = useState(budget.totalIncome.toString());
+  const [income, setIncome] = useState<number>(budget.totalIncome);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
+  const { format } = useCurrencyFormatter();
+
   useEffect(() => {
-    setIncome(budget.totalIncome.toString());
+    setIncome(budget.totalIncome);
   }, [budget.totalIncome]);
 
   const totalPercentage = useMemo(
@@ -70,7 +73,7 @@ export const SettingsView = () => {
 
   const handleSave = () => {
     updateBudget({
-      totalIncome: parseFloat(income) || 0,
+      totalIncome: income || 0,
       categories: budget.categories,
     });
   };
@@ -122,8 +125,6 @@ export const SettingsView = () => {
     setCategoryToDelete(null);
   };
 
-  const incomeValue = parseFloat(income) || 0;
-
   return (
     <div className="space-y-6">
       <div>
@@ -138,14 +139,12 @@ export const SettingsView = () => {
           </Label>
           <div className="relative">
             <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-            <Input
+            <CurrencyInput
               id="income"
-              type="number"
-              step="0.01"
-              min="0"
               value={income}
-              onChange={(event) => setIncome(event.target.value)}
+              onChange={(val) => setIncome(val)}
               className="pl-10 text-lg"
+              showSymbol={false}
             />
           </div>
         </div>
@@ -170,7 +169,7 @@ export const SettingsView = () => {
 
           <div className="space-y-6">
             {budget.categories.map(category => {
-              const allocated = (incomeValue * category.percentage) / 100;
+              const allocated = (income * category.percentage) / 100;
               const Icon = getCategoryIcon(category.icon);
               return (
                 <div key={category.id} className="space-y-3 rounded-lg border border-border/60 bg-card/60 p-4">
@@ -186,7 +185,7 @@ export const SettingsView = () => {
                         <p className="text-base font-medium text-foreground">
                           {getCategoryLabel(category.name, t)}
                         </p>
-                        <p className="text-sm text-muted-foreground">${allocated.toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground">{format(allocated, true)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
