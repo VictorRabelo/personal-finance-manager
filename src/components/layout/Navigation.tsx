@@ -1,4 +1,4 @@
-import { LayoutDashboard, Receipt, Target, Settings } from 'lucide-react';
+import { LayoutDashboard, Receipt, Target, Settings, History } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
 interface NavigationProps {
@@ -12,6 +12,7 @@ export const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
   const tabs = [
     { id: 'dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { id: 'expenses', label: t('nav.expenses'), icon: Receipt },
+    { id: 'history', label: t('nav.history'), icon: History },
     { id: 'goals', label: t('nav.goals'), icon: Target },
     { id: 'settings', label: t('nav.settings'), icon: Settings },
   ];

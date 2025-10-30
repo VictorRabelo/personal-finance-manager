@@ -6,6 +6,7 @@ import { DashboardView } from '@/components/dashboard/DashboardView';
 import { ExpensesView } from '@/components/expenses/ExpensesView';
 import { GoalsView } from '@/components/goals/GoalsView';
 import { SettingsView } from '@/components/settings/SettingsView';
+import { HistoryView } from '@/components/history/HistoryView';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -16,6 +17,8 @@ const Index = () => {
         return <DashboardView />;
       case 'expenses':
         return <ExpensesView />;
+      case 'history':
+        return <HistoryView />;
       case 'goals':
         return <GoalsView />;
       case 'settings':
