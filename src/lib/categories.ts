@@ -78,9 +78,7 @@ export const rebalanceCategories = (
   targetValue: number,
 ): Category[] => {
   const target = categories.find(category => category.id === targetId);
-  if (!target) {
-    return categories;
-  }
+  if (!target) return categories;
 
   const clampedValue = Math.min(100, Math.max(0, Math.round(targetValue)));
   const others = categories.filter(category => category.id !== targetId);

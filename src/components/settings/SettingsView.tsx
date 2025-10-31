@@ -233,6 +233,7 @@ export const SettingsView = () => {
         <Button
           onClick={handleSave}
           className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
+          disabled={totalPercentage !== 100}
         >
           <Save className="mr-2 h-4 w-4" />
           {t('common.save')}
