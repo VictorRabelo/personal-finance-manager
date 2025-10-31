@@ -1,9 +1,11 @@
 import { useApp } from '@/contexts/AppContext';
+import { useCurrencyFormatter } from '@/lib/formatMoney';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 export const BudgetChart = () => {
   const { budget, getCategorySpent, t } = useApp();
   const currentMonth = new Date().toISOString().slice(0, 7);
+  const { formatCurrency } = useCurrencyFormatter();
 
   const data = budget.categories.map(category => ({
     name: t(category.name),
@@ -13,7 +15,7 @@ export const BudgetChart = () => {
   }));
 
   return (
-    <ResponsiveContainer width="100%" height='80%'>
+    <ResponsiveContainer width="100%" height='88%'>
       <PieChart>
         <Pie
           data={data}
@@ -30,7 +32,7 @@ export const BudgetChart = () => {
           ))}
         </Pie>
         <Tooltip
-          formatter={(value: number) => `$${value.toFixed(2)}`}
+          formatter={(value: number) => `${formatCurrency(value)}`}
           contentStyle={{
             backgroundColor: 'hsl(var(--card))',
             border: '1px solid hsl(var(--border))',

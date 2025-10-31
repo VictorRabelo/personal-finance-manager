@@ -6,6 +6,7 @@ import { BudgetChart } from './BudgetChart';
 import { CategoryBreakdown } from './CategoryBreakdown';
 import { RecentExpenses } from './RecentExpenses';
 import React from 'react';
+import { getCurrentMonthLabel } from '@/lib/formatLocalDate';
 
 type StatCard = {
   label: string;
@@ -16,8 +17,9 @@ type StatCard = {
 };
 
 export const DashboardView = () => {
-  const { budget, expenses, t } = useApp();
-  const { format } = useCurrencyFormatter();
+  const { budget, expenses, language, t } = useApp();
+  const { formatCurrency } = useCurrencyFormatter();
+  const currentMonthLabel = getCurrentMonthLabel(language);
 
   const currentMonth = new Date().toISOString().slice(0, 7);
   const totalSpent = expenses
@@ -69,7 +71,7 @@ export const DashboardView = () => {
                 <div className="flex-1">
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
                   <p className={`text-2xl font-bold ${stat.color}`}>
-                    {format(stat.value, true)}
+                    {formatCurrency(stat.value, true)}
                   </p>
                 </div>
               </div>
@@ -80,9 +82,14 @@ export const DashboardView = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6 bg-gradient-card border-border/50">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">
-            {t('dashboard.distribution')}
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-foreground">
+              {t("dashboard.distribution")}
+            </h3>
+            <span className="text-sm text-muted-foreground font-medium">
+              {currentMonthLabel}
+            </span>
+          </div>
           <BudgetChart />
         </Card>
 

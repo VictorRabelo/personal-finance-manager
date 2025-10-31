@@ -4,9 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Trash2, Plus } from 'lucide-react';
 import { format } from 'date-fns';
+import { formatLocalDate } from "@/lib/formatLocalDate";
+import { useCurrencyFormatter } from '@/lib/formatMoney';
 
 export const GoalList = () => {
-  const { goals, deleteGoal, updateGoal, t } = useApp();
+  const { goals, language, deleteGoal, updateGoal, t } = useApp();
+  const { formatCurrency } = useCurrencyFormatter();
 
   if (goals.length === 0) {
     return (
@@ -39,7 +42,7 @@ export const GoalList = () => {
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg text-foreground">{goal.name}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {format(new Date(goal.deadline), 'MMM dd, yyyy')}
+                    {formatLocalDate(goal.deadline, language)}
                   </p>
                 </div>
                 <Button
@@ -56,7 +59,7 @@ export const GoalList = () => {
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{t('goals.progress')}</span>
                   <span className="font-medium text-foreground">
-                    ${goal.currentAmount.toFixed(2)} / ${goal.targetAmount.toFixed(2)}
+                    {formatCurrency(goal.currentAmount)} / {formatCurrency(goal.targetAmount)}
                   </span>
                 </div>
                 <Progress

@@ -55,7 +55,7 @@ export const SettingsView = () => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
-  const { format } = useCurrencyFormatter();
+  const { formatCurrency } = useCurrencyFormatter();
 
   useEffect(() => {
     setIncome(budget.totalIncome);
@@ -185,7 +185,7 @@ export const SettingsView = () => {
                         <p className="text-base font-medium text-foreground">
                           {getCategoryLabel(category.name, t)}
                         </p>
-                        <p className="text-sm text-muted-foreground">{format(allocated, true)}</p>
+                        <p className="text-sm text-muted-foreground">{formatCurrency(allocated, true)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">

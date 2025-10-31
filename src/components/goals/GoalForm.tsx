@@ -3,6 +3,7 @@ import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { CurrencyInput } from '@/components/ui/current-amount';
 
 interface GoalFormProps {
   onClose: () => void;
@@ -12,17 +13,23 @@ export const GoalForm = ({ onClose }: GoalFormProps) => {
   const { addGoal, t } = useApp();
   const [formData, setFormData] = useState({
     name: '',
-    targetAmount: '',
-    currentAmount: '',
+    targetAmount: null,
+    currentAmount: null,
     deadline: '',
   });
+
+  const [validFields, setValidFields] = useState({
+    name: false,
+    targetAmount: false,
+    deadline: false,
+  });
+
+  const isFormValid = validFields.name && validFields.targetAmount && validFields.deadline;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.targetAmount || !formData.deadline) {
-      return;
-    }
+    if (!isFormValid) return;
 
     addGoal({
       name: formData.name,
@@ -41,7 +48,11 @@ export const GoalForm = ({ onClose }: GoalFormProps) => {
         <Input
           id="name"
           value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          onChange={(e) => {
+            const val = e.target.value;
+            setFormData({ ...formData, name: val });
+            setValidFields((prev) => ({ ...prev, name: val.trim().length > 0 }));
+          }}
           placeholder={t('goals.name')}
           required
         />
@@ -49,28 +60,21 @@ export const GoalForm = ({ onClose }: GoalFormProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="targetAmount">{t('goals.target')}</Label>
-        <Input
-          id="targetAmount"
-          type="number"
-          step="0.01"
-          min="0"
+        <CurrencyInput
+          id={"targetAmount"}
           value={formData.targetAmount}
-          onChange={(e) => setFormData({ ...formData, targetAmount: e.target.value })}
-          placeholder="0.00"
-          required
+          required={true}
+          onChange={(val) => setFormData({ ...formData, targetAmount: val })}
+          onValidityChange={(isValid) => setValidFields((prev) => ({ ...prev, targetAmount: isValid }))}
         />
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="currentAmount">{t('goals.current')}</Label>
-        <Input
-          id="currentAmount"
-          type="number"
-          step="0.01"
-          min="0"
+        <CurrencyInput
+          id={"currentAmount"}
           value={formData.currentAmount}
-          onChange={(e) => setFormData({ ...formData, currentAmount: e.target.value })}
-          placeholder="0.00"
+          onChange={(val) => setFormData({ ...formData, currentAmount: val })}
         />
       </div>
 
@@ -80,7 +84,11 @@ export const GoalForm = ({ onClose }: GoalFormProps) => {
           id="deadline"
           type="date"
           value={formData.deadline}
-          onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+          onChange={(e) => {
+            const val = e.target.value;
+            setFormData({ ...formData, deadline: val });
+            setValidFields((prev) => ({ ...prev, deadline: !!val }));
+          }}
           required
         />
       </div>
@@ -89,7 +97,11 @@ export const GoalForm = ({ onClose }: GoalFormProps) => {
         <Button type="button" variant="outline" onClick={onClose} className="flex-1">
           {t('common.cancel')}
         </Button>
-        <Button type="submit" className="flex-1 bg-gradient-success">
+        <Button
+          type="submit"
+          className="flex-1 bg-gradient-success"
+          disabled={!isFormValid}
+        >
           {t('common.save')}
         </Button>
       </div>

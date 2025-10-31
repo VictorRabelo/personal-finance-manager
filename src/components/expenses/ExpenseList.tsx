@@ -2,10 +2,13 @@ import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatLocalDate } from "@/lib/formatLocalDate";
+import { useCurrencyFormatter } from '@/lib/formatMoney';
 
 export const ExpenseList = () => {
-  const { expenses, budget, deleteExpense, t } = useApp();
+  const { expenses, budget, language, deleteExpense, t } = useApp();
+  console.log("🚀 ~ ExpenseList ~ expenses:", expenses)
+  const { formatCurrency } = useCurrencyFormatter();
 
   const sortedExpenses = [...expenses].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -40,13 +43,13 @@ export const ExpenseList = () => {
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span>{t(category?.name)}</span>
                     <span>•</span>
-                    <span>{format(new Date(expense.date), 'MMM dd, yyyy')}</span>
+                    <span>{formatLocalDate(expense.date, language)}</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-lg font-semibold text-foreground">
-                  ${expense.amount.toFixed(2)}
+                  {formatCurrency(expense.amount)}
                 </span>
                 <Button
                   variant="ghost"

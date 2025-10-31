@@ -43,6 +43,7 @@ interface AppContextType {
   updateBudget: (budget: Budget) => void;
   addExpense: (expense: Omit<Expense, 'id'>) => void;
   deleteExpense: (id: string) => void;
+  deleteAllExpenses: () => void;
   addGoal: (goal: Omit<Goal, 'id'>) => void;
   updateGoal: (id: string, goal: Partial<Goal>) => void;
   deleteGoal: (id: string) => void;
@@ -193,6 +194,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     toast({
       title: t('common.success'),
       description: t('alerts.expenseDeleted'),
+    });
+  };
+
+  const deleteAllExpenses = () => {
+    setExpenses([]);
+    localStorage.removeItem("expenses");
+    toast({
+      title: t("common.success"),
+      description: t("alerts.allExpensesDeleted"),
     });
   };
 
@@ -370,6 +380,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       updateBudget,
       addExpense,
       deleteExpense,
+      deleteAllExpenses,
       addGoal,
       updateGoal,
       deleteGoal,

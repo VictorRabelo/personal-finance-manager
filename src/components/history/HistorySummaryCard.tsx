@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { HistoryCategoryChart } from './HistoryCategoryChart';
+import { useCurrencyFormatter } from '@/lib/formatMoney';
 
 export type HistorySummaryCategory = {
   id: string;
@@ -39,20 +40,23 @@ export const HistorySummaryCard = ({
   categoryDistributionLabel,
   noDataLabel,
 }: HistorySummaryCardProps) => {
+
+  const { formatCurrency } = useCurrencyFormatter();
+
   const stats = [
     {
       label: totalIncomeLabel,
-      value: `$${plannedIncome.toFixed(2)}`,
+      value: `${formatCurrency(plannedIncome)}`,
       accent: 'text-primary',
     },
     {
       label: totalSpentLabel,
-      value: `$${totalSpent.toFixed(2)}`,
+      value: `${formatCurrency(totalSpent)}`,
       accent: 'text-destructive',
     },
     {
       label: remainingLabel,
-      value: `$${remaining.toFixed(2)}`,
+      value: `${formatCurrency(remaining)}`,
       accent: remaining >= 0 ? 'text-success' : 'text-destructive',
     },
   ];
@@ -95,7 +99,7 @@ export const HistorySummaryCard = ({
                       <span className="font-medium text-foreground">{category.name}</span>
                     </div>
                     <span className="text-muted-foreground">
-                      ${category.value.toFixed(2)} • {category.percentage.toFixed(0)}%
+                      {formatCurrency(category.value)} • {category.percentage.toFixed(0)}%
                     </span>
                   </div>
                 ))}

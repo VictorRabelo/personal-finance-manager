@@ -231,9 +231,11 @@ export const HistoryView = () => {
       />
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2 bg-gradient-card border-border/50 p-6 w-full overflow-x-auto">
+        <Card className="hidden sm:block lg:col-span-2 bg-gradient-card border-border/50 p-6 w-full overflow-x-auto">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-foreground">{t('history.monthlyDistribution')}</h3>
+            <h3 className="text-lg font-semibold text-foreground">
+              {t('history.monthlyDistribution')}
+            </h3>
             <p className="text-sm text-muted-foreground">
               {t('history.summaryDescription', { period: t('history.periodYear', { year: selectedYear }) })}
             </p>

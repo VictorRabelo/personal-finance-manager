@@ -25,12 +25,18 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
     date: new Date().toISOString().split('T')[0],
   });
 
+  const [validFields, setValidFields] = useState({
+    categoryId: false,
+    description: false,
+    amount: false,
+  });
+
+  const isFormValid = validFields.categoryId && validFields.amount && validFields.description;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.categoryId || !formData.amount || !formData.description) {
-      return;
-    }
+    if (!isFormValid) return;
 
     addExpense({
       categoryId: formData.categoryId,
@@ -49,7 +55,10 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
         <Label htmlFor="category">{t('expenses.category')}</Label>
         <Select
           value={formData.categoryId}
-          onValueChange={(value) => setFormData({ ...formData, categoryId: value })}
+          onValueChange={(value) => {
+            setFormData({ ...formData, categoryId: value })
+            setValidFields((prev) => ({ ...prev, categoryId: !!value }));
+          }}
         >
           <SelectTrigger>
             <SelectValue placeholder={t('expenses.selectCategory')} />
@@ -69,7 +78,12 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
         <Input
           id="description"
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          onChange={(e) => {
+            const val = e.target.value;
+
+            setFormData({ ...formData, description: val })
+            setValidFields((prev) => ({ ...prev, description: val.trim().length > 0 }));
+          }}
           placeholder={t('expenses.description')}
           required
         />
@@ -79,7 +93,9 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
         <Label htmlFor="amount">{t('expenses.amount')}</Label>
         <CurrencyInput
           value={formData.amount}
+          required={true}
           onChange={(val) => setFormData({ ...formData, amount: val })}
+          onValidityChange={(isValid) => setValidFields((prev) => ({ ...prev, amount: isValid }))}
         />
       </div>
 
@@ -98,7 +114,11 @@ export const ExpenseForm = ({ onClose }: ExpenseFormProps) => {
         <Button type="button" variant="outline" onClick={onClose} className="flex-1">
           {t('common.cancel')}
         </Button>
-        <Button type="submit" className="flex-1 bg-gradient-primary">
+        <Button
+          type="submit"
+          className="flex-1 bg-gradient-primary"
+          disabled={!isFormValid}
+        >
           {t('common.save')}
         </Button>
       </div>

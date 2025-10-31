@@ -1,3 +1,4 @@
+import { useCurrencyFormatter } from '@/lib/formatMoney';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 type CategoryData = {
@@ -13,8 +14,14 @@ type HistoryCategoryChartProps = {
   noDataLabel: string;
 };
 
-export const HistoryCategoryChart = ({ data, totalSpent, noDataLabel }: HistoryCategoryChartProps) => {
+export const HistoryCategoryChart = ({
+  data,
+  totalSpent,
+  noDataLabel,
+}: HistoryCategoryChartProps) => {
+
   const chartData = data.filter(item => item.value > 0);
+  const { formatCurrency } = useCurrencyFormatter();
 
   if (!chartData.length || totalSpent === 0) {
     return <p className="text-sm text-muted-foreground">{noDataLabel}</p>;
@@ -38,13 +45,14 @@ export const HistoryCategoryChart = ({ data, totalSpent, noDataLabel }: HistoryC
           ))}
         </Pie>
         <Tooltip
-          formatter={(value: number, name: string) => [`$${value.toFixed(2)}`, name]}
+          formatter={(value: number, name: string) => [`${formatCurrency(value)}`, name]}
           contentStyle={{
             backgroundColor: 'hsl(var(--card))',
             border: '1px solid hsl(var(--border))',
             borderRadius: '12px',
           }}
           labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}
+          itemStyle={{color: 'hsl(var(--foreground))',}}
         />
         <Legend />
       </PieChart>

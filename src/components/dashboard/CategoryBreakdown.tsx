@@ -5,7 +5,7 @@ import { useCurrencyFormatter } from '@/lib/formatMoney';
 export const CategoryBreakdown = () => {
   const { budget, getCategorySpent, t } = useApp();
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const { format } = useCurrencyFormatter();
+  const { formatCurrency } = useCurrencyFormatter();
 
   return (
     <div className="space-y-4">
@@ -20,7 +20,7 @@ export const CategoryBreakdown = () => {
             <div className="flex items-center justify-between text-sm">
               <span className="font-medium text-foreground">{t(category.name)}</span>
               <span className="text-muted-foreground">
-                ${spent.toFixed(2)} / ${allocated.toFixed(2)}
+                {formatCurrency(spent)} / {formatCurrency(allocated)}
               </span>
             </div>
             <Progress
@@ -39,7 +39,7 @@ export const CategoryBreakdown = () => {
             />
             <div className="flex items-center justify-between text-xs">
               <span className={remaining >= 0 ? 'text-success' : 'text-destructive'}>
-                {t('categories.remaining')}: {format(Math.abs(remaining), true)}
+                {t('categories.remaining')}: {formatCurrency(Math.abs(remaining), true)}
               </span>
               <span className="text-muted-foreground">
                 {percentage ? percentage.toFixed(0) : 0}%
